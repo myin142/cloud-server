@@ -1,23 +1,21 @@
 - hosts: server
   gather_facts: no
   user: root
+  vars_files:
+    - ./vars/main.yml
   tasks:
+    # Install deps
     - name: install pacman packages
       pacman:
         name:
-          - docker
-          - docker-compose
           - python-pip
-    # - name: Make sure docker is running
-    #   systemd:
-    #     state: started
-    #     name: docker
     - name: install python dependencies
       pip:
         name:
           - docker
           - docker-compose
 
+    # Set systemd-resolved config
     - name: Copy over resolved config
       copy:
         src: resolved.conf
@@ -34,21 +32,20 @@
         name: systemd-resolved
         state: restarted
 
-    - name: Copy over docker-compose file
-      copy:
-        src: docker-compose.yml
-        dest: ~/services/
+    # Start services
+    - name: Resolve docker-compose template
+      template:
+        src: files/docker-compose.yml.j2
+        dest: ~/services/docker-compose.yml
     - name: Tear down existing services
-      # command: docker-compose down
       docker_compose:
         project_src: ~/services/
         state: absent
     - name: run docker compose
-      # command: docker-compose up
       docker_compose:
         project_src: ~/services/
-        files:
-          - docker-compose.yml
+
+    # Clean up
     - name: Prune everything
       docker_prune:
         containers: yes

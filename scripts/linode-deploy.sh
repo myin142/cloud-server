@@ -1,1 +1,1 @@
-ansible-playbook ansible/linode_deploy.yml -i ansible/hosts
+ansible-playbook ansible/linode_deploy.yml -i ansible/hosts --ask-vault-pass
