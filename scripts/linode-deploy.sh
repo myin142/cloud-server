@@ -1,0 +1,1 @@
+ansible-playbook ansible/linode_deploy.yml -i ansible/hosts

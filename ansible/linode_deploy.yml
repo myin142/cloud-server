@@ -1,0 +1,51 @@
+- hosts: server
+  gather_facts: no
+  user: root
+  tasks:
+    - name: install pacman packages
+      pacman:
+        name:
+          - docker
+          - docker-compose
+          - python-pip
+    # - name: Make sure docker is running
+    #   systemd:
+    #     state: started
+    #     name: docker
+    - name: install python dependencies
+      pip:
+        name:
+          - docker
+          - docker-compose
+
+    - name: Copy over resolved config
+      copy:
+        src: resolved.conf
+        dest: /etc/systemd/
+      register: resolved
+    - name: Create symbolic link for resolved config
+      file:
+        src: /run/systemd/resolve/resolv.conf
+        dest: /etc/resolv.conf
+        state: link
+    - name: Restart systemd resolved
+      when: resolved.changed
+      systemd:
+        name: systemd-resolved
+        state: restarted
+
+    - name: Copy over docker-compose file
+      copy:
+        src: docker-compose.yml
+        dest: ~/services/
+    - name: Tear down existing services
+      # command: docker-compose down
+      docker_compose:
+        project_src: ~/services/
+        state: absent
+    - name: run docker compose
+      # command: docker-compose up
+      docker_compose:
+        project_src: ~/services/
+        files:
+          - docker-compose.yml

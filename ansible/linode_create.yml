@@ -1,0 +1,17 @@
+# https://www.linode.com/docs/guides/deploy-linodes-using-ansible/
+- name: Create Linode
+  hosts: localhost
+  vars_files:
+    - ./vars/main.yml
+  tasks:
+    - name: Create a new Linode.
+      linode_v4:
+        label: "main-arch"
+        access_token: "{{ token }}"
+        type: g6-nanode-1
+        region: eu-central
+        image: linode/arch
+        authorized_keys:
+          - "~/.ssh/id_main.pub"
+        state: present
+      register: my_linode

@@ -1,0 +1,5 @@
+plugin: linode
+regions:
+  - eu-central
+types:
+  - g6-nanode-1
