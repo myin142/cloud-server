@@ -7,6 +7,7 @@
     # Install deps
     - name: install pacman packages
       pacman:
+        # update_cache: yes
         name:
           - python-pip
     - name: install python dependencies
