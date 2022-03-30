@@ -1,0 +1,29 @@
+# Set systemd-resolved config
+- name: Copy over resolved config
+  copy:
+    src: resolved.conf
+    dest: /etc/systemd/
+  register: resolved
+- name: Create symbolic link for resolved config
+  file:
+    src: /run/systemd/resolve/resolv.conf
+    dest: /etc/resolv.conf
+    state: link
+- name: Restart systemd resolved
+  when: resolved.changed
+  systemd:
+    name: systemd-resolved
+    state: restarted
+
+# Start services
+- name: Resolve docker-compose template
+  template:
+    src: files/docker-compose.yml.j2
+    dest: ~/services/docker-compose.yml
+- name: Tear down existing services
+  docker_compose:
+    project_src: ~/services/
+    state: absent
+- name: run docker compose
+  docker_compose:
+    project_src: ~/services/
