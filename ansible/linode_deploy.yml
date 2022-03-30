@@ -18,6 +18,9 @@
           - docker
           - docker-compose
 
+    - name: Setup cert
+      include_tasks: tasks/cert.yml
+
     - name: Setup pihole
       include_tasks: tasks/pihole.yml
 

@@ -1,0 +1,4 @@
+- name: Copy over cert script
+  copy:
+    src: cert.sh
+    dest: "{{services_root}}/cert/"
