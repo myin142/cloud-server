@@ -21,6 +21,9 @@
     - name: Setup pihole
       include_tasks: tasks/pihole.yml
 
+    - name: Setup squid
+      include_tasks: tasks/squid.yml
+
     # Clean up
     - name: Prune everything
       docker_prune:

@@ -1,0 +1,21 @@
+- name: Install squid
+  pacman:
+    name:
+      - squid
+
+- name: Copy over squid config file
+  copy:
+    src: squid.conf
+    dest: /etc/squid/
+  register: config
+- name: Copy over squid auth file
+  copy:
+    src: squid-users
+    dest: /etc/squid/users
+  register: config
+
+- name: Enable and start squid
+  systemd:
+    name: squid
+    enabled: yes
+    state: "{{'restarted' if config.changed else 'started'}}"
