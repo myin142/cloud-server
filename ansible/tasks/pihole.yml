@@ -28,5 +28,5 @@
       PIHOLE_DNS_: 1.1.1.1;1.0.0.1;2606:4700:4700::1111
       WEBPASSWORD: "{{ pihole_pw }}"
     volumes:
-      - "~/services/pihole/etc-pihole:/etc/pihole"
-      - "~/services/pihole/etc-dnsmasq.d:/etc/dnsmasq.d"
+      - "{{ services_root }}pihole/etc-pihole:/etc/pihole"
+      - "{{ services_root }}pihole/etc-dnsmasq.d:/etc/dnsmasq.d"
