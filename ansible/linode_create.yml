@@ -13,5 +13,5 @@
         image: linode/arch
         authorized_keys:
           - "~/.ssh/id_main.pub"
-        state: present
+        state: absent
       register: my_linode

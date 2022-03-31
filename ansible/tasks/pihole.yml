@@ -15,6 +15,14 @@
     name: systemd-resolved
     state: restarted
 
+- name: start cloudflared
+  docker_container:
+    name: cloudflared
+    image: visibilityspots/cloudflared:latest
+    network_mode: host
+    env:
+      ADDRESS: "::"
+
 - name: start pihole
   docker_container:
     name: pihole
@@ -22,10 +30,10 @@
     ports:
       - "53:53/tcp"
       - "53:53/udp"
-      - "127.0.0.1:8080:80/tcp"
+      - "127.0.0.1:8888:80/tcp"
     env:
       TZ: Europe/Vienna
-      PIHOLE_DNS_: 1.1.1.1;1.0.0.1;2606:4700:4700::1111
+      PIHOLE_DNS_: "127.0.0.1#5054;1.1.1.1;1.0.0.1;2606:4700:4700::1111"
       WEBPASSWORD: "{{ pihole_pw }}"
     volumes:
       - "{{ services_root }}pihole/etc-pihole:/etc/pihole"
